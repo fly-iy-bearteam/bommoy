@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symo end-BEAR Connector</title>
+    <!-- CSS dùng chung -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Supabase SDK CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+    <!-- 1. MODAL CẢNH BÁO 18+ (Tự động mở khi mới vào trang) -->
+    <div id="age-modal" class="modal">
+        <div class="modal-content">
+            <h3>⚠️ CẢNH BÁO NỘI DUNG</h3>
+            <p>Trang web chứa các hình ảnh không phù hợp với trẻ em dưới 18 tuổi. Vui lòng xác nhận độ tuổi trước khi tiếp tục truy cập.</p>
+            <div class="modal-buttons">
+                <button class="btn btn-accept" onclick="acceptAge()">Tôi đã đủ 18+</button>
+                <button class="btn btn-exit" onclick="window.location.href='https://google.com'">Thoát</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. HEADER & MENU 3 GẠCH (HAMBURGER) -->
+    <header>
+        <div class="navbar-container">
+            <h1>Symo end-BEAR</h1>
+            <!-- Nút bấm mở menu 3 gạch -->
+            <button class="hamburger-btn" onclick="toggleMenu()">☰</button>
+        </div>
+
+        <!-- Danh sách Menu trượt xuống -->
+        <nav id="nav-menu" class="nav-menu">
+            <a href="index.html" class="active">Trang chủ</a>
+            <a href="thongbao.html">Thông báo</a>
+            <a href="banquyen.html">Bản quyền</a>
+            <a href="quydinh.html">Quy định</a>
+            <a href="tiktok.html">TikTok</a>
+            <a href="douyin.html">Douyin</a>
+            <!-- Nút đăng nhập/đăng xuất phân quyền Symo -->
+            <button id="btn-open-login" class="btn-login-nav" onclick="openLoginModal()">Đăng nhập Symo</button>
+            <button id="btn-logout" class="btn-login-nav" onclick="logout()" style="display:none; color: var(--danger-color); border-color: var(--danger-color);">Đăng xuất</button>
+        </nav>
+    </header>
+
+    <!-- 3. NỘI DUNG TRANG CHỦ -->
+    <main class="main-content">
+        <section class="welcome-card">
+            <h2>Trang Web Chính Thức Của Symo</h2>
+            <p>
+                Chào mừng các fan đến với cổng kết nối chính thức <strong>Symo end-BEAR Connector</strong>. 
+                Tại đây bạn có thể cập nhật các thông báo mới nhất, theo dõi nội dung từ TikTok/Douyin chính chủ và tải các bộ ảnh chất lượng cao.
+            </p>
+            
+            <!-- Hộp cảnh báo lừa đảo/giả mạo -->
+            <div class="alert-box">
+                🚨 <strong>CẢNH BÁO LỪA ĐẢO & BẢO VỆ THƯƠNG HIỆU:</strong><br>
+                Gần đây có tình trạng người khác giả mạo Symo để lấy ảnh và bán lại thu tiền bất chính. 
+                Symo <strong>KHÔNG</strong> bán ảnh hay nhận chuyển khoản cá nhân qua bất kỳ kênh trung gian nào. 
+                Vui lòng không tiếp tay cho kẻ gian và cùng chung tay bảo vệ thương hiệu của chúng tôi!
+            </div>
+
+            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 20px;">
+                <a href="tiktok.html" class="btn-hero">🎵 Xem Cập Nhật TikTok</a>
+                <a href="douyin.html" class="btn-hero" style="background-color: #2b2b36;">🎬 Xem Cập Nhật Douyin</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- 4. FOOTER -->
+    <footer>
+        <p>&copy; Symo end-BEAR Connector. Xin vui lòng không làm ảnh hưởng thương hiệu của chúng tôi.</p>
+    </footer>
+
+    <!-- 5. MODAL ĐĂNG NHẬP DÀNH CHO SYMO -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content" style="border-color: var(--primary-color);">
+            <h3 style="color: var(--primary-color);">Đăng nhập Symo</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Dành riêng cho Quản trị viên để đăng bài và quản lý file</p>
+            
+            <form id="login-form" style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
+                <input type="email" id="email" placeholder="Email đăng nhập" required style="padding: 10px; background: var(--card-inner); border: 1px solid var(--border-color); color: white; border-radius: 6px;">
+                <input type="password" id="password" placeholder="Mật khẩu" required style="padding: 10px; background: var(--card-inner); border: 1px solid var(--border-color); color: white; border-radius: 6px;">
+                <button type="submit" class="btn btn-accept">Đăng nhập</button>
+            </form>
+            
+            <button class="btn btn-exit" onclick="closeLoginModal()" style="margin-top: 10px; width: 100%;">Đóng</button>
+            <p id="auth-error" style="color: var(--danger-color); margin-top: 10px; font-size: 0.85rem;"></p>
+        </div>
+    </div>
+
+    <!-- 6. SCRIPT XỬ LÝ GIAO DIỆN & KẾT NỐI -->
+    <script>
+        // Bật/tắt Menu 3 gạch
+        function toggleMenu() {
+            document.getElementById('nav-menu').classList.toggle('active');
+        }
+
+        // Mở/Đóng Modal Đăng nhập
+        function openLoginModal() {
+            document.getElementById('login-modal').style.display = 'flex';
+        }
+        function closeLoginModal() {
+            document.getElementById('login-modal').style.display = 'none';
+        }
+
+        // Xử lý xác nhận độ tuổi 18+
+        function acceptAge() {
+            document.getElementById('age-modal').style.display = 'none';
+            localStorage.setItem('age_verified', 'true');
+        }
+
+        window.onload = function() {
+            if (localStorage.getItem('age_verified') !== 'true') {
+                document.getElementById('age-modal').style.display = 'flex';
+            }
+        };
+    </script>
+    <script src="js/supabase.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

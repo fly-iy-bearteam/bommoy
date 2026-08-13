@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cập nhật TikTok - Symo end-BEAR</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+    <!-- HEADER & MENU 3 GẠCH -->
+    <header>
+        <div class="navbar-container">
+            <h1>Symo end-BEAR</h1>
+            <button class="hamburger-btn" onclick="toggleMenu()">☰</button>
+        </div>
+
+        <nav id="nav-menu" class="nav-menu">
+            <a href="index.html">Trang chủ</a>
+            <a href="thongbao.html">Thông báo</a>
+            <a href="banquyen.html">Bản quyền</a>
+            <a href="quydinh.html">Quy định</a>
+            <a href="tiktok.html" class="active">TikTok</a>
+            <a href="douyin.html">Douyin</a>
+            <button id="btn-open-login" class="btn-login-nav" onclick="openLoginModal()">Đăng nhập Symo</button>
+            <button id="btn-logout" class="btn-login-nav" onclick="logout()" style="display:none; color: var(--danger-color); border-color: var(--danger-color);">Đăng xuất</button>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <!-- FORM ĐĂNG BÀI + UPLOAD FILE LÊN SUPABASE (CHỈ XUẤT HIỆN KHI SYMO ĐĂNG NHẬP) -->
+        <div id="symo-upload-card" class="media-card" style="display: none; border-color: var(--primary-color);">
+            <h3 style="color: var(--primary-color); margin-bottom: 10px;">➕ Tải lên bài đăng mới (Quyền Symo)</h3>
+            <form id="upload-form" style="display: flex; flex-direction: column; gap: 10px;">
+                <input type="text" id="media-title" placeholder="Tiêu đề bài đăng" required style="padding: 8px; background: var(--card-inner); color: white; border: 1px solid var(--border-color); border-radius: 6px;">
+                
+                <label style="font-size: 0.85rem; color: var(--text-muted);">1. Chọn ảnh hiển thị (JPG/PNG):</label>
+                <input type="file" id="img-file" accept="image/*" required style="color: white;">
+
+                <label style="font-size: 0.85rem; color: var(--text-muted);">2. Chọn file đính kèm cho Fan tải (.ZIP):</label>
+                <input type="file" id="zip-file" accept=".zip" required style="color: white;">
+
+                <button type="submit" id="btn-submit-upload" class="btn btn-accept" style="margin-top: 10px;">Đăng bài & Upload Supabase</button>
+            </form>
+            <p id="upload-status" style="color: var(--primary-color); font-size: 0.85rem; margin-top: 8px;"></p>
+        </div>
+
+        <h2 style="color: var(--primary-color); margin-bottom: 15px;">🎵 Bài đăng TikTok mới nhất</h2>
+
+        <!-- DANH SÁCH BÀI ĐĂNG TỰ ĐỘNG TẢI TỪ SUPABASE -->
+        <div id="media-list">
+            <p style="color: var(--text-muted);">Đang tải dữ liệu từ Supabase...</p>
+        </div>
+    </main>
+
+    <!-- LIGHTBOX MODAL (THU PHÓNG ẢNH) -->
+    <div id="lightbox" class="lightbox">
+        <div class="lightbox-controls">
+            <button class="lightbox-btn" onclick="zoomIn()">➕ Phóng to</button>
+            <button class="lightbox-btn" onclick="zoomOut()">➖ Thu nhỏ</button>
+            <button class="lightbox-btn" onclick="closeLightbox()">✖ Đóng</button>
+        </div>
+        <img id="lightbox-img" class="lightbox-content" src="" alt="Zoom Image">
+    </div>
+
+    <!-- MODAL ĐĂNG NHẬP -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content" style="border-color: var(--primary-color);">
+            <h3 style="color: var(--primary-color);">Đăng nhập Symo</h3>
+            <form id="login-form" style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
+                <input type="email" id="email" placeholder="Email đăng nhập" required style="padding: 10px; background: var(--card-inner); border: 1px solid var(--border-color); color: white; border-radius: 6px;">
+                <input type="password" id="password" placeholder="Mật khẩu" required style="padding: 10px; background: var(--card-inner); border: 1px solid var(--border-color); color: white; border-radius: 6px;">
+                <button type="submit" class="btn btn-accept">Đăng nhập</button>
+            </form>
+            <button class="btn btn-exit" onclick="closeLoginModal()" style="margin-top: 10px; width: 100%;">Đóng</button>
+            <p id="auth-error" style="color: var(--danger-color); margin-top: 10px; font-size: 0.85rem;"></p>
+        </div>
+    </div>
+
+    <script src="js/supabase.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/media.js"></script>
+</body>
+</html>

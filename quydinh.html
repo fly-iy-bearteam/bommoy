@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quy định - Symo end-BEAR Connector</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+    <!-- HEADER & MENU 3 GẠCH -->
+    <header>
+        <div class="navbar-container">
+            <h1>Symo end-BEAR</h1>
+            <button class="hamburger-btn" onclick="toggleMenu()">☰</button>
+        </div>
+
+        <nav id="nav-menu" class="nav-menu">
+            <a href="index.html">Trang chủ</a>
+            <a href="thongbao.html">Thông báo</a>
+            <a href="banquyen.html">Bản quyền</a>
+            <a href="quydinh.html" class="active">Quy định</a>
+            <a href="tiktok.html">TikTok</a>
+            <a href="douyin.html">Douyin</a>
+            <button id="btn-open-login" class="btn-login-nav" onclick="openLoginModal()">Đăng nhập Symo</button>
+            <button id="btn-logout" class="btn-login-nav" onclick="logout()" style="display:none; color: var(--danger-color); border-color: var(--danger-color);">Đăng xuất</button>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <section class="welcome-card" style="text-align: left;">
+            <h2 style="color: var(--primary-color); margin-bottom: 15px;">📜 QUY ĐỊNH CHUNG DÀNH CHO FAN & NGƯỜI TRUY CẬP</h2>
+            
+            <div style="background-color: var(--card-inner); padding: 15px; border-radius: 8px; border-left: 4px solid var(--danger-color); margin-bottom: 20px;">
+                <h3 style="color: var(--danger-color); font-size: 1.1rem; margin-bottom: 5px;">⚠️ ĐIỀU KHỎAN GIỚI HẠN ĐỘ TUỔI (18+)</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">
+                    Trang web chứa các nội dung và hình ảnh mang tính chất riêng tư/nghệ thuật không phù hợp với khán giả trẻ em dưới 18 tuổi. Khuyến cáo phụ huynh giám sát và trẻ em dưới 18 tuổi không nên tiếp tục truy cập.
+                </p>
+            </div>
+
+            <h3 style="color: var(--primary-color); margin-bottom: 10px;">Nội quy tham gia cộng đồng:</h3>
+            <ol style="color: var(--text-muted); margin-left: 20px; line-height: 1.8;">
+                <li><strong>Tôn trọng idol và thương hiệu:</strong> Không sử dụng hình ảnh/video của Symo để thêu dệt tin đồn thất thiệt hoặc xúc phạm cá nhân khác.</li>
+                <li><strong>Quyền sử dụng file .ZIP:</strong> Các file ảnh nén (Ví dụ: <code>Symo-fan-01.zip</code>) được chia sẻ miễn phí cho mục đích lưu trữ cá nhân của Fan. Nghiêm cấm đem bán hoặc thương mại hóa.</li>
+                <li><strong>Quyền hạn Admin (Symo):</strong> Ban quản trị Symo có toàn quyền chỉnh sửa, ẩn hoặc xóa bỏ các bài viết/thông báo trên hệ thống mà không cần thông báo trước.</li>
+            </ol>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; Symo end-BEAR Connector. Xin vui lòng không làm ảnh hưởng thương hiệu của chúng tôi.</p>
+    </footer>
+
+    <!-- MODAL ĐĂNG NHẬP -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content" style="border-color: var(--primary-color);">
+            <h3 style="color: var(--primary-color);">Đăng nhập Symo</h3>
+            <form id="login-form" style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
+                <input type="email" id="email" placeholder="Email đăng nhập" required style="padding: 10px; background: var(--card-inner); border: 1px solid var(--border-color); color: white; border-radius: 6px;">
+                <input type="password" id="password" placeholder="Mật khẩu" required style="padding: 10px; background: var(--card-inner); border: 1px solid var(--border-color); color: white; border-radius: 6px;">
+                <button type="submit" class="btn btn-accept">Đăng nhập</button>
+            </form>
+            <button class="btn btn-exit" onclick="closeLoginModal()" style="margin-top: 10px; width: 100%;">Đóng</button>
+            <p id="auth-error" style="color: var(--danger-color); margin-top: 10px; font-size: 0.85rem;"></p>
+        </div>
+    </div>
+
+    <script>
+        function toggleMenu() { document.getElementById('nav-menu').classList.toggle('active'); }
+        function openLoginModal() { document.getElementById('login-modal').style.display = 'flex'; }
+        function closeLoginModal() { document.getElementById('login-modal').style.display = 'none'; }
+    </script>
+    <script src="js/supabase.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

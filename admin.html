@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Quản Trị - Symo end-BEAR</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+    <!-- HEADER & MENU 3 GẠCH -->
+    <header>
+        <div class="navbar-container">
+            <h1>Symo end-BEAR (ADMIN)</h1>
+            <button class="hamburger-btn" onclick="toggleMenu()">☰</button>
+        </div>
+
+        <nav id="nav-menu" class="nav-menu">
+            <a href="index.html">Trang chủ</a>
+            <a href="thongbao.html">Thông báo</a>
+            <a href="banquyen.html">Bản quyền</a>
+            <a href="quydinh.html">Quy định</a>
+            <a href="tiktok.html">TikTok</a>
+            <a href="douyin.html">Douyin</a>
+            <a href="admin.html" class="active">Quản trị</a>
+            <button id="btn-open-login" class="btn-login-nav" onclick="openLoginModal()">Đăng nhập Symo</button>
+            <button id="btn-logout" class="btn-login-nav" onclick="logout()" style="display:none; color: var(--danger-color); border-color: var(--danger-color);">Đăng xuất</button>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <!-- CẢNH BÁO NẾU CHƯA ĐĂNG NHẬP -->
+        <div id="admin-lock-msg" class="welcome-card" style="border-color: var(--danger-color);">
+            <h2 style="color: var(--danger-color);">🔒 KHOẢ BẢO MẬT ADMIN</h2>
+            <p>Trang này chỉ dành riêng cho Quản trị viên Symo. Vui lòng bấm vào nút **Đăng nhập Symo** trên Menu để mở khóa quyền quản trị.</p>
+            <button class="btn btn-accept" onclick="openLoginModal()" style="margin-top: 10px;">Đăng nhập ngay</button>
+        </div>
+
+        <!-- KHU VỰC QUẢN TRỊ (CHỈ HIỆN KHI ĐÃ ĐĂNG NHẬP) -->
+        <div id="admin-dashboard" style="display: none;">
+            
+            <!-- FORM 1: ĐĂNG THÔNG BÁO CHUNG (cho trang thongbao.html) -->
+            <section class="welcome-card" style="text-align: left; margin-bottom: 25px; border-color: var(--primary-color);">
+                <h3 style="color: var(--primary-color); margin-bottom: 12px;">📢 1. Đăng Thông Báo Mới</h3>
+                <form id="admin-post-notice-form" style="display: flex; flex-direction: column; gap: 12px;">
+                    <input type="text" id="notice-title" placeholder="Tiêu đề thông báo" required style="padding: 10px; background: var(--card-inner); border: 1px solid var(--border-color); color: white; border-radius: 6px;">
+                    <textarea id="notice-content" rows="4" placeholder="Nội dung thông báo..." required style="padding: 10px; background: var(--card-inner); border: 1px solid var(--border-color); color: white; border-radius: 6px;"></textarea>
+                    <button type="submit" class="btn btn-accept">Đăng Thông Báo</button>
+                </form>
+            </section>
+
+            <!-- FORM 2: UPLOAD BÀI ĐĂNG TIKTOK / DOUYIN + FILE ZIP -->
+            <section class="welcome-card" style="text-align: left; border-color: var(--primary-color);">
+                <h3 style="color: var(--primary-color); margin-bottom: 12px;">🎬 2. Đăng Bài Media (TikTok / Douyin) & Up File ZIP</h3>
+                <form id="admin-upload-media-form" style="display: flex; flex-direction: column; gap: 12px;">
+                    <label style="font-size: 0.9rem; color: var(--text-muted);">Chọn nền tảng đăng bài:</label>
+                    <select id="media-platform" style="padding: 10px; background: var(--card-inner); border: 1px solid var(--border-color); color: white; border-radius: 6px;">
+                        <option value="tiktok">TikTok (tiktok.html)</option>
+                        <option value="douyin">Douyin (douyin.html)</option>
+                    </select>
+
+                    <input type="text" id="media-title" placeholder="Tiêu đề bài đăng" required style="padding: 10px; background: var(--card-inner); border: 1px solid var(--border-color); color: white; border-radius: 6px;">
+                    
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">1. File ảnh đại diện (JPG/PNG):</label>
+                    <input type="file" id="media-img" accept="image/*" required style="color: white;">
+
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">2. File đính kèm cho Fan (.ZIP):</label>
+                    <input type="file" id="media-zip" accept=".zip" required style="color: white;">
+
+                    <button type="submit" id="btn-admin-submit" class="btn btn-accept">Đăng Bài & Upload Lên Supabase</button>
+                </form>
+                <p id="admin-upload-status" style="color: var(--primary-color); font-size: 0.9rem; margin-top: 10px; text-align: center;"></p>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- MODAL ĐĂNG NHẬP -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content" style="border-color: var(--primary-color);">
+            <h3 style="color: var(--primary-color);">Đăng nhập Symo</h3>
+            <form id="login-form" style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
+                <input type="email" id="email" placeholder="Email đăng nhập" required style="padding: 10px; background: var(--card-inner); border: 1px solid var(--border-color); color: white; border-radius: 6px;">
+                <input type="password" id="password" placeholder="Mật khẩu" required style="padding: 10px; background: var(--card-inner); border: 1px solid var(--border-color); color: white; border-radius: 6px;">
+                <button type="submit" class="btn btn-accept">Đăng nhập</button>
+            </form>
+            <button class="btn btn-exit" onclick="closeLoginModal()" style="margin-top: 10px; width: 100%;">Đóng</button>
+            <p id="auth-error" style="color: var(--danger-color); margin-top: 10px; font-size: 0.85rem;"></p>
+        </div>
+    </div>
+
+    <script>
+        function toggleMenu() { document.getElementById('nav-menu').classList.toggle('active'); }
+        function openLoginModal() { document.getElementById('login-modal').style.display = 'flex'; }
+        function closeLoginModal() { document.getElementById('login-modal').style.display = 'none'; }
+    </script>
+    <script src="js/supabase.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+              </html>
+              
